@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useContext, useEffect, memo } from 'react';
 import {connect} from 'react-redux';
 import  LazyLoad, {forceCheck} from 'react-lazyload';
 import { 
@@ -16,29 +16,34 @@ import Scroll from '../../baseUI/scroll/index'
 import Loading from '../../baseUI/loading/index';
 import { categoryTypes, alphaTypes } from '../../api/config';
 import { NavContainer, ListContainer, List, ListItem } from "./style";
+import { CategoryDataContext, CHANGE_CATEGORY, CHANGE_ALPHA, Data } from './data';
 
 function Singers (props) {
-    let [category, setCategory] = useState('');
-    let [alpha, setAlpha] = useState('');
+    // let [category, setCategory] = useState('');
+    // let [alpha, setAlpha] = useState('');
+    const {data, dispatch} = useContext (CategoryDataContext);
+    const {category, alpha} = data.toJS ();
   
     const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
   
     const { getHotSingerDispatch, updateDispatch, pullDownRefreshDispatch, pullUpRefreshDispatch } = props;
 
-    console.log('ghh'. singerList, singerList.toJS());
-
     useEffect(() => {
-        getHotSingerDispatch();
+        if (!singerList.size) {
+            getHotSingerDispatch();
+        }
         // eslint-disable-next-line
       }, []);
 
       let handleUpdateAlpha = (val) => {
-        setAlpha(val);
+        // setAlpha(val);
+        dispatch ({type: CHANGE_ALPHA, data: val});
         updateDispatch(category, val);
       };
     
       let handleUpdateCatetory = (val) => {
-        setCategory(val);
+        // setCategory(val);
+        dispatch ({type: CHANGE_CATEGORY, data: val});
         updateDispatch(val, alpha);
       };
     
