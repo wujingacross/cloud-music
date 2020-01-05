@@ -4,10 +4,12 @@ import { CSSTransition } from 'react-transition-group';
 import  Header  from './../../baseUI/header/index';
 import Scroll from '../../baseUI/scroll/index';
 import Loading from '../../baseUI/loading/index';
-import {Container, TopDesc, Menu, SongList, SongItem} from './style';
+import {Container, TopDesc, Menu} from './style';
 import { getName, getCount, isEmptyObject } from './../../api/utils';
 import style from "../../assets/global-style";
 import { getAlbumList, changeEnterLoading } from './store/actionCreators';
+import MusicNote from "../../baseUI/music-note/index";
+import SongsList from '../SongsList';
 
 export const HEADER_HEIGHT = 45;
 
@@ -20,6 +22,8 @@ function Album (props) {
   const [title, setTitle] = useState ("歌单");
   const [isMarquee, setIsMarquee] = useState (false);// 是否跑马灯
   const headerEl = useRef ();
+  const musicNoteRef = useRef();
+
   let currentAlbum = currentAlbumImmutable.toJS ();
 
   useEffect (() => {
@@ -131,6 +135,10 @@ function Album (props) {
     setShowStatus (false);
   }, []);
 
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation({ x, y });
+  };
+
   const renderTopDesc = () => (
     <TopDesc background={currentAlbum.coverImgUrl}>
       <div className="background">
@@ -177,38 +185,6 @@ function Album (props) {
       </Menu>
     );
 
-    const renderSongList= () => (
-      <SongList>
-        <div className="first_line">
-          <div className="play_all">
-            <i className="iconfont">&#xe6e3;</i>
-            <span > 播放全部 <span className="sum">(共 {currentAlbum.tracks.length} 首)</span></span>
-          </div>
-          <div className="add_list">
-            <i className="iconfont">&#xe62d;</i>
-            <span > 收藏 ({getCount (currentAlbum.subscribedCount)})</span>
-          </div>
-        </div>
-        <SongItem>
-          {
-            currentAlbum.tracks.map ((item, index) => {
-              return (
-                <li key={index}>
-                  <span className="index">{index + 1}</span>
-                  <div className="info">
-                    <span>{item.name}</span>
-                    <span>
-                      { getName (item.ar) } - { item.al.name }
-                    </span>
-                  </div>
-                </li>
-              )
-            })
-          }
-        </SongItem>
-      </SongList>
-    )
-
   return (
     <CSSTransition
       in={showStatus}  
@@ -225,11 +201,18 @@ function Album (props) {
           <div>
             { renderTopDesc () }
             { renderMenu () }
-            { renderSongList () }
+            <SongsList
+              songs={currentAlbum.tracks}
+              collectCount={currentAlbum.subscribedCount}
+              showCollect={true}
+              showBackground={true}
+              musicAnimation={musicAnimation}
+            ></SongsList>
           </div>  
         </Scroll>
         ) : null}
-        { enterLoading ? <Loading></Loading> : null}
+        <Loading show={enterLoading}></Loading>
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   )

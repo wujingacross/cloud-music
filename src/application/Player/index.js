@@ -36,11 +36,6 @@ function Player (props) {
     let currentSong = immutableCurrentSong.toJS ();
     const sequencePlayList = immutableSequencePlayList.toJS ();
 
-    // 先 mock 一份 currentIndex
-    useEffect (() => {
-        changeCurrentIndexDispatch (0); //currentIndex 默认为 - 1，临时改成 0
-    }, [])
-
     useEffect (() => {
         if (
             !playList.length ||
