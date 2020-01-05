@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import animations from "create-keyframe-animation";
 import {  getName } from "../../../api/utils";
+import ProgressBar from "../../../baseUI/progress-bar";
 import { CSSTransition } from "react-transition-group";
 import {
   NormalPlayerContainer,
@@ -9,6 +10,7 @@ import {
   Bottom,
   Operators,
   CDWrapper,
+  ProgressWrapper
 } from "./style";
 import { prefixStyle } from "../../../api/utils";
 
@@ -127,22 +129,29 @@ function NormalPlayer (props) {
                 </CDWrapper>
             </Middle>
             <Bottom className="bottom">
+                <ProgressWrapper>
+                    <span className="time time-l">0:00</span>
+                    <div className="progress-bar-wrapper">
+                        <ProgressBar percent={0.2}></ProgressBar>
+                    </div>
+                    <div className="time time-r">4:17</div>
+                </ProgressWrapper>
                 <Operators>
-                <div className="icon i-left" >
-                    <i className="iconfont">&#xe625;</i>
-                </div>
-                <div className="icon i-left">
-                    <i className="iconfont">&#xe6e1;</i>
-                </div>
-                <div className="icon i-center">
-                    <i className="iconfont">&#xe723;</i>
-                </div>
-                <div className="icon i-right">
-                    <i className="iconfont">&#xe718;</i>
-                </div>
-                <div className="icon i-right">
-                    <i className="iconfont">&#xe640;</i>
-                </div>
+                    <div className="icon i-left" >
+                        <i className="iconfont">&#xe625;</i>
+                    </div>
+                    <div className="icon i-left">
+                        <i className="iconfont">&#xe6e1;</i>
+                    </div>
+                    <div className="icon i-center">
+                        <i className="iconfont">&#xe723;</i>
+                    </div>
+                    <div className="icon i-right">
+                        <i className="iconfont">&#xe718;</i>
+                    </div>
+                    <div className="icon i-right">
+                        <i className="iconfont">&#xe640;</i>
+                    </div>
                 </Operators>
             </Bottom>
         </NormalPlayerContainer>
