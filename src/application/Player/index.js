@@ -14,7 +14,6 @@ import NormalPlayer from './normalPlayer';
 
 function Player (props) {
     const { fullScreen } = props;
-
     const { toggleFullScreenDispatch } = props;
 
     const currentSong = {
@@ -25,7 +24,7 @@ function Player (props) {
 
     return (
         <div>
-            <MiniPlayer song={currentSong}/>
+            <MiniPlayer song={currentSong} fullScreen={fullScreen} toggleFullScreen={toggleFullScreenDispatch} />
             <NormalPlayer 
                 song={currentSong}
                 fullScreen={fullScreen}

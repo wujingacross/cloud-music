@@ -5,6 +5,7 @@ import { CSSTransition } from "react-transition-group";
 
 function MiniPlayer (props) {
   const { song, fullScreen } = props;
+  const { toggleFullScreen } = props;
   const miniPlayerRef = useRef ();
 
   return (
@@ -19,7 +20,7 @@ function MiniPlayer (props) {
         miniPlayerRef.current.style.display = "none";
         }}
     >
-      <MiniPlayerContainer ref={miniPlayerRef}>
+      <MiniPlayerContainer ref={miniPlayerRef} onClick={() => toggleFullScreen(true)}>
         <div className="icon">
           <div className="imgWrapper">
             <img className="play" src={song.al.picUrl} width="40" height="40" alt="img"/>
