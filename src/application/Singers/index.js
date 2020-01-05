@@ -17,11 +17,9 @@ import Scroll from '../../baseUI/scroll/index'
 import Loading from '../../baseUI/loading/index';
 import { categoryTypes, alphaTypes } from '../../api/config';
 import { NavContainer, ListContainer, List, ListItem } from "./style";
-import { CategoryDataContext, CHANGE_CATEGORY, CHANGE_ALPHA } from './data';
+import { CategoryDataContext, CHANGE_CATEGORY, CHANGE_ALPHA, Data } from './data';
 
 function Singers (props) {
-    // let [category, setCategory] = useState('');
-    // let [alpha, setAlpha] = useState('');
     const {data, dispatch} = useContext (CategoryDataContext);
     const {category, alpha} = data.toJS ();
   
@@ -37,13 +35,11 @@ function Singers (props) {
       }, []);
 
       let handleUpdateAlpha = (val) => {
-        // setAlpha(val);
         dispatch ({type: CHANGE_ALPHA, data: val});
         updateDispatch(category, val);
       };
     
       let handleUpdateCatetory = (val) => {
-        // setCategory(val);
         dispatch ({type: CHANGE_CATEGORY, data: val});
         updateDispatch(val, alpha);
       };
@@ -93,7 +89,7 @@ function Singers (props) {
     };
 
     return (
-        <>
+        <Data>
             <NavContainer>
                 <Horizen 
                     list={categoryTypes} 
@@ -119,9 +115,9 @@ function Singers (props) {
                 { renderSingerList () }
                 </Scroll>
             </ListContainer>
-            { enterLoading ? <Loading></Loading> : null }
+            <Loading show={enterLoading}></Loading>
             {renderRoutes(props.route.routes)}
-        </>
+        </Data>
     )
 }
 
