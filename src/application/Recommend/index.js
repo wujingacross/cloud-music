@@ -1,5 +1,6 @@
 import React, { memo, useEffect } from 'react';
 import { connect } from "react-redux";
+import { renderRoutes } from "react-router-config";
 import { forceCheck } from 'react-lazyload';
 import * as actionTypes from './store/actionCreators';
 import Slider from '../../components/slider';
@@ -9,7 +10,7 @@ import Scroll from '../../baseUI/scroll';
 import { Content } from './style';
 
 function Recommend (props) {
-    const { bannerList, recommendList, enterLoading } = props;
+    const { route, bannerList, recommendList, enterLoading } = props;
     const { getBannerDataDispatch, getRecommendListDataDispatch } = props;
 
     useEffect (() => {
@@ -50,6 +51,7 @@ function Recommend (props) {
               </div>
           </Scroll>
           { enterLoading ? <Loading></Loading> : null }
+          {renderRoutes(route.children)}
         </Content> 
     )
 }

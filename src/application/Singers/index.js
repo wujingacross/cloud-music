@@ -16,7 +16,7 @@ import Scroll from '../../baseUI/scroll/index'
 import Loading from '../../baseUI/loading/index';
 import { categoryTypes, alphaTypes } from '../../api/config';
 import { NavContainer, ListContainer, List, ListItem } from "./style";
-import { CategoryDataContext, CHANGE_CATEGORY, CHANGE_ALPHA, Data } from './data';
+import { CategoryDataContext, CHANGE_CATEGORY, CHANGE_ALPHA } from './data';
 
 function Singers (props) {
     // let [category, setCategory] = useState('');
