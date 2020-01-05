@@ -23,13 +23,13 @@ function Rank (props) {
          // eslint-disable-next-line
       }, []);
 
-    const enterDetail = (id) => {
-        props.history.push (`/recommend/${id}`)
-    }
-
     let globalStartIndex = filterIndex (rankList);
     let officialList = rankList.slice (0, globalStartIndex);
     let globalList = rankList.slice (globalStartIndex);
+
+    const enterDetail = (detail) => {
+      props.history.push (`/rank/${detail.id}`)
+    }
 
     // 这是渲染榜单列表函数，传入 global 变量来区分不同的布局方式
     const renderRankList = (list, global) => {
@@ -41,7 +41,7 @@ function Rank (props) {
                 <ListItem 
                     key={item.coverImgId} 
                     tracks={item.tracks} 
-                    onClick={() => enterDetail(item.name)}
+                    onClick={() => enterDetail(item)}
                 >
                 <div className="img_wrapper">
                     <img src={item.coverImgUrl} alt=""/>
@@ -103,4 +103,4 @@ const mapStateToProps = (state) => ({
     }
   };
   
-export default connect (mapStateToProps, mapDispatchToProps)(memo(Rank));
+export default connect(mapStateToProps, mapDispatchToProps)(memo(Rank));
