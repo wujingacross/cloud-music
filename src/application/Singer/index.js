@@ -15,6 +15,7 @@ function Singer (props) {
     artist: immutableArtist, 
     songs: immutableSongs, 
     loading,
+    songsCount
   } = props;
   const { getSingerDataDispatch } = props;
   const [showStatus, setShowStatus] = useState (true);
@@ -124,7 +125,7 @@ function Singer (props) {
       unmountOnExit
       onExited={() => props.history.goBack ()}
     >
-      <Container>
+      <Container play={songsCount}>
         <Header title={"头部"} handleClick={setShowStatusFalse} ref={header}></Header>
         <ImgWrapper ref={imageWrapper} bgUrl={artist.picUrl}>
           <div className="filter"></div>
@@ -154,6 +155,7 @@ const mapStateToProps = state => ({
   artist: state.getIn (["singerInfo", "artist"]),
   songs: state.getIn (["singerInfo", "songsOfArtist"]),
   loading: state.getIn (["singerInfo", "loading"]),
+  songsCount: state.getIn (['player', 'playList']).size
 });
 // 映射 dispatch 到 props 上
 const mapDispatchToProps = dispatch => {

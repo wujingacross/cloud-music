@@ -14,7 +14,7 @@ import {
   } from './style';
 
 function Rank (props) {
-    const { rankList:list, loading } = props;
+    const { rankList:list, loading, songsCount } = props;
     const { getRankListDataDispatch } = props;
     let rankList = list ? list.toJS() : [];
 
@@ -73,7 +73,7 @@ function Rank (props) {
 let displayStyle = loading ? {"display":"none"}:  {"display": ""};
 
     return (
-        <Container>
+        <Container play={songsCount}>
             <Scroll>
                 <div>
                     <h1 className="offical" style={displayStyle}> 官方榜 </h1>
@@ -93,6 +93,7 @@ let displayStyle = loading ? {"display":"none"}:  {"display": ""};
 const mapStateToProps = (state) => ({
     rankList: state.getIn (['rank', 'rankList']),
     loading: state.getIn (['rank', 'loading']),
+    songsCount: state.getIn (['player', 'playList']).size
   });
   // 映射 dispatch 到 props 上
   const mapDispatchToProps = (dispatch) => {

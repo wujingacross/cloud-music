@@ -10,7 +10,7 @@ import Scroll from '../../baseUI/scroll';
 import { Content } from './style';
 
 function Recommend (props) {
-    const { route, bannerList, recommendList, enterLoading } = props;
+    const { route, bannerList, recommendList, enterLoading, songsCount } = props;
     const { getBannerDataDispatch, getRecommendListDataDispatch } = props;
 
     useEffect (() => {
@@ -43,7 +43,7 @@ function Recommend (props) {
     // });
 
     return (
-        <Content>
+        <Content play={songsCount}>
           <Scroll onScroll={forceCheck}>
               <div>
                   <Slider bannerList={bannerListJS}></Slider>
@@ -62,7 +62,8 @@ const mapStateToProps = (state) => ({
     // 不然每次 diff 比对 props 的时候都是不一样的引用，还是导致不必要的重渲染，属于滥用 immutable
     bannerList: state.getIn (['recommend', 'bannerList']),
     recommendList: state.getIn (['recommend', 'recommendList']),
-    enterLoading: state.getIn (['recommend', 'enterLoading'])
+    enterLoading: state.getIn (['recommend', 'enterLoading']),
+    songsCount: state.getIn (['player', 'playList']).size
   });
   // 映射 dispatch 到 props 上
   const mapDispatchToProps = (dispatch) => {
