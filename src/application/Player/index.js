@@ -11,6 +11,7 @@ import {
 } from "./store/actionCreators";
 import MiniPlayer from './miniPlayer';
 import NormalPlayer from './normalPlayer';
+import PlayList from './playList/index';
 import { playMode } from '../../api/config';
 import Toast from "./../../baseUI/toast/index";
 import { getSongUrl, isEmptyObject, shuffle, findIndex } from '../../api/utils';
@@ -19,7 +20,7 @@ function Player (props) {
     const { fullScreen, playing, currentIndex, playList:immutablePlayList, currentSong: immutableCurrentSong, 
         mode, sequencePlayList:immutableSequencePlayList } = props;
     const { toggleFullScreenDispatch, togglePlayingDispatch, changeCurrentIndexDispatch, changeCurrentDispatch, 
-        changePlayListDispatch, changeModeDispatch } = props;
+        changePlayListDispatch, changeModeDispatch, togglePlayListDispatch } = props;
     const audioRef = useRef ();
     // 目前播放时间
     const [currentTime, setCurrentTime] = useState (0);
@@ -30,6 +31,7 @@ function Player (props) {
     // 记录当前的歌曲，以便于下次重渲染时比对是否是一首歌
     const [preSong, setPreSong] = useState ({});
     const [modeText, setModeText] = useState ("");
+    const [songReady, setSongReady] = useState (true);
     const toastRef = useRef ();
 
     const playList = immutablePlayList.toJS();
@@ -41,15 +43,18 @@ function Player (props) {
             !playList.length ||
             currentIndex === -1 ||
             !playList[currentIndex] ||
-            playList[currentIndex].id === preSong.id 
+            playList[currentIndex].id === preSong.id ||
+            !songReady// 标志位为 false
         )
             return;
         let current = playList[currentIndex] || {};
-        changeCurrentDispatch (current);// 赋值 currentSong
         setPreSong (current);
+        setSongReady (false); // 把标志位置为 false, 表示现在新的资源没有缓冲完成，不能切歌
+        changeCurrentDispatch (current);// 赋值 currentSong
         audioRef.current.src = getSongUrl(current.id);
         setTimeout (() => {
             audioRef.current && audioRef.current.play ();
+            setSongReady (true);
         });
         togglePlayingDispatch (true);// 播放状态
         setCurrentTime (0);// 从头开始播放
@@ -160,6 +165,7 @@ function Player (props) {
                         playing={playing}
                         percent={percent}// 进度
                         clickPlaying={clickPlaying}
+                        togglePlayList={togglePlayListDispatch}
                     />
                      <NormalPlayer 
                         song={currentSong}
@@ -175,10 +181,12 @@ function Player (props) {
                         changeMode={changeMode}
                         handlePrev={handlePrev}
                         handleNext={handleNext}
+                        togglePlayList={togglePlayListDispatch}
                     />
                 </>
             )}
             <audio ref={audioRef} onTimeUpdate={updateTime} onEnded={handleEnd}></audio>
+            <PlayList />
             <Toast text={modeText} ref={toastRef}></Toast>  
         </div>
     )
