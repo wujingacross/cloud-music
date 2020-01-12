@@ -12,14 +12,16 @@ import {
   CDWrapper,
   ProgressWrapper,
   LyricContainer, 
-  LyricWrapper
+  LyricWrapper,
+  List, 
+  ListItem
 } from "./style";
-import { playMode } from './../../../api/config';
+import { playMode, list } from './../../../api/config';
 import { prefixStyle } from "../../../api/utils";
 import Scroll from "../../../baseUI/scroll";
 
 function NormalPlayer (props) {
-    const { song, fullScreen, playing, percent, duration, currentTime, mode } =  props;
+    const { song, fullScreen, playing, percent, duration, currentTime, mode, speed } =  props;
     const { 
         toggleFullScreenDispatch, 
         clickPlaying, 
@@ -30,7 +32,8 @@ function NormalPlayer (props) {
         togglePlayList, 
         currentLineNum,
         currentPlayingLyric,
-        currentLyric 
+        currentLyric,
+        clickSpeed
     } = props;
     const normalPlayerRef = useRef ();
     const cdWrapperRef = useRef ();
@@ -142,7 +145,6 @@ function NormalPlayer (props) {
         }
       };
   
-      console.log('vvbb', currentLyric, currentState.current, currentPlayingLyric);
   return (
     <CSSTransition
         classNames="normal"
@@ -233,6 +235,22 @@ function NormalPlayer (props) {
                 </CSSTransition>
             </Middle>
             <Bottom className="bottom">
+                <List>
+                    <span> 倍速听歌 </span>
+                    {
+                        list.map ((item) => {
+                        return (
+                            <ListItem 
+                                key={item.key}
+                                className={`${speed === item.key ? 'selected': ''}`} 
+                                onClick={() => clickSpeed (item.key)}
+                            >
+                                {item.name}
+                            </ListItem>
+                        )
+                        })
+                    }
+                </List>
                 <ProgressWrapper>
                     <span className="time time-l">{formatPlayTime(currentTime)}</span>
                     <div className="progress-bar-wrapper">
