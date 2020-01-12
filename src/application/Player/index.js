@@ -14,7 +14,9 @@ import NormalPlayer from './normalPlayer';
 import PlayList from './playList/index';
 import { playMode } from '../../api/config';
 import Toast from "./../../baseUI/toast/index";
+import { getLyricRequest } from "../../api/request";
 import { getSongUrl, isEmptyObject, shuffle, findIndex } from '../../api/utils';
+import Lyric from './../../api/lyric-parser';
 
 function Player (props) {
     const { fullScreen, playing, currentIndex, playList:immutablePlayList, currentSong: immutableCurrentSong, 
@@ -32,11 +34,46 @@ function Player (props) {
     const [preSong, setPreSong] = useState ({});
     const [modeText, setModeText] = useState ("");
     const [songReady, setSongReady] = useState (true);
+    const [currentPlayingLyric, setPlayingLyric] = useState ("");
     const toastRef = useRef ();
+    const currentLyric = useRef ();
+    const currentLineNum = useRef (0);
 
     const playList = immutablePlayList.toJS();
     let currentSong = immutableCurrentSong.toJS ();
     const sequencePlayList = immutableSequencePlayList.toJS ();
+
+    const getLyric = id => {
+      let lyric = "";
+      if (currentLyric.current) {
+        currentLyric.current.stop ();
+      }
+      // 避免 songReady 恒为 false 的情况
+      getLyricRequest (id)
+        .then (data => {
+          console.log (data)
+          lyric = data.lrc.lyric;
+          if (!lyric) {
+            currentLyric.current = null;
+            return;
+          }
+          currentLyric.current = new Lyric(lyric, handleLyric);
+          console.log('1233', currentLyric.current);
+          currentLyric.current.play ();
+          currentLineNum.current = 0;
+          currentLyric.current.seek (0);
+        })
+        .catch (() => {
+          songReady.current = true;
+          audioRef.current.play ();
+        });
+    };
+
+    const handleLyric = ({lineNum, txt}) => {
+      if (!currentLyric.current) return;
+      currentLineNum.current = lineNum;
+      setPlayingLyric(txt);
+    };
 
     useEffect (() => {
         if (
@@ -57,6 +94,7 @@ function Player (props) {
             setSongReady (true);
         });
         togglePlayingDispatch (true);// 播放状态
+        getLyric (current.id);
         setCurrentTime (0);// 从头开始播放
         setDuration ((current.dt/ 1000) | 0);// 时长
     }, [playList, currentIndex]);
@@ -75,6 +113,9 @@ function Player (props) {
     const clickPlaying = (e, state) => {
         e.stopPropagation ();
         togglePlayingDispatch (state);
+        if (currentLyric.current) {
+          currentLyric.current.togglePlay (currentTime*1000);
+        }
     };
 
     const updateTime = e => {
@@ -87,6 +128,9 @@ function Player (props) {
         audioRef.current.currentTime = newTime;
         if (!playing) {
           togglePlayingDispatch (true);
+        }
+        if (currentLyric.current) {
+          currentLyric.current.seek (newTime * 1000);
         }
     };
 
@@ -182,6 +226,9 @@ function Player (props) {
                         handlePrev={handlePrev}
                         handleNext={handleNext}
                         togglePlayList={togglePlayListDispatch}
+                        currentLyric={currentLyric.current}
+                        currentPlayingLyric={currentPlayingLyric}
+                        currentLineNum={currentLineNum.current}
                     />
                 </>
             )}
