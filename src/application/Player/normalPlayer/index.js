@@ -21,7 +21,7 @@ import Scroll from "../../../baseUI/scroll";
 function NormalPlayer (props) {
     const { song, fullScreen, playing, percent, duration, currentTime, mode } =  props;
     const { 
-        toggleFullScreen, 
+        toggleFullScreenDispatch, 
         clickPlaying, 
         onProgressChange, 
         handlePrev, 
@@ -164,12 +164,21 @@ function NormalPlayer (props) {
                 />
             </div>
             <div className="background layer"></div>
-            <Top className="top">
-                <div className="back" onClick={() => toggleFullScreen(false)}>
+            {/* <Top className="top">
+                <div className="back" onClick={() => toggleFullScreenDispatch(false)}>
                 <i className="iconfont icon-back">&#xe662;</i>
                 </div>
                 <h1 className="title">{song.name}</h1>
                 <h1 className="subtitle">{getName(song.ar)}</h1>
+            </Top> */}
+            <Top className="top">
+                <div className="back" onClick={() => toggleFullScreenDispatch(false)}>
+                    <i className="iconfont icon-back">&#xe662;</i>
+                </div>
+                <div className="text">
+                    <h1 className="title">{song.name}</h1>
+                    <h1 className="subtitle">{getName (song.ar)}</h1>
+                </div>
             </Top>
             <Middle ref={cdWrapperRef} onClick={toggleCurrentState}>
                 <CSSTransition
@@ -178,6 +187,7 @@ function NormalPlayer (props) {
                     in={currentState.current !== "lyric"}
                 >
                     <CDWrapper style={{visibility: currentState.current !== "lyric" ? "visible" : "hidden"}}>
+                        <div className={`needle ${playing? '' : 'pause'}`}></div>
                         <div className="cd">
                             <img
                             className={`image play ${playing ?"" : "pause"}`}

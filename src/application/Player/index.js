@@ -205,7 +205,7 @@ function Player (props) {
                     <MiniPlayer 
                         song={currentSong} 
                         fullScreen={fullScreen} 
-                        toggleFullScreen={toggleFullScreenDispatch} 
+                        toggleFullScreenDispatch={toggleFullScreenDispatch} 
                         playing={playing}
                         percent={percent}// 进度
                         clickPlaying={clickPlaying}
@@ -214,7 +214,7 @@ function Player (props) {
                      <NormalPlayer 
                         song={currentSong}
                         fullScreen={fullScreen}
-                        toggleFullScreen={toggleFullScreenDispatch}
+                        toggleFullScreenDispatch={toggleFullScreenDispatch}
                         playing={playing}
                         clickPlaying={clickPlaying}
                         duration={duration}// 总时长

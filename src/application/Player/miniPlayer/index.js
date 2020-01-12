@@ -6,7 +6,7 @@ import ProgressCircle from '../../../baseUI/progress-circle';
 
 function MiniPlayer (props) {
   const { song, fullScreen, playing, percent } = props;
-  const { clickPlaying, toggleFullScreen, togglePlayList } = props;
+  const { clickPlaying, toggleFullScreenDispatch, togglePlayList } = props;
   const miniPlayerRef = useRef ();
 //   // 先 mock 一份 percent 数据
 //   let percent = 0.2;
@@ -28,7 +28,7 @@ const handleTogglePlayList = (e) => {
         miniPlayerRef.current.style.display = "none";
         }}
     >
-      <MiniPlayerContainer ref={miniPlayerRef} onClick={() => toggleFullScreen(true)}>
+      <MiniPlayerContainer ref={miniPlayerRef} onClick={() => toggleFullScreenDispatch(true)}>
         <div className="icon">
           <div className="imgWrapper">
             <img className={`play ${playing ?"": "pause"}`} src={song.al.picUrl} width="40"height="40"alt="img"/>
